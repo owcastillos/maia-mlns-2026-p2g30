@@ -69,13 +69,14 @@ def _ensure_nltk_data():
 
 _ensure_nltk_data()
 
-_tokenizer = RegexpTokenizer(r"[a-zA-ZáéíóúüñÁÉÍÓÚÜÑ]+")
+_tokenizer = RegexpTokenizer(r"[a-zA-ZáéíóúüñÁÉÍÓÚÜÑ0-9]+")
 _spanish_stopwords = set(stopwords.words("spanish"))
 _stemmer = SnowballStemmer("spanish")
 
 def text_preprocess(text: str) -> str:
     tokens = _tokenizer.tokenize(text.lower())
-    tokens = [t for t in tokens if t not in _spanish_stopwords and len(t) > 2]
+    tokens = [t for t in tokens if not t.isdigit()]
+    tokens = [t for t in tokens if t not in _spanish_stopwords]
     tokens = [_stemmer.stem(t) for t in tokens]
     return " ".join(tokens)
 
